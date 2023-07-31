@@ -23,19 +23,22 @@ let panelID = "my-info-panel";
  * init() is called when the page has loaded
  */
 function init() {
-  // Create a new Leaflet map centered on the continental US
-  map = L.map("map").setView([51.5, -0.1], 14);
+  // Create a new Leaflet map centered on the Waterdeep map
+  var map = L.map('map').setView([20, -100], 3);
+  L.tileLayer('map/{z}/{x}/{y}.png', {
+    continuousWorld: false,
+    noWrap: true,
+    minZoom: 0,
+    maxZoom: 8,
+  }).addTo(map);
 
-  // This is the Carto Positron basemap
-  L.tileLayer(
-    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png",
-    {
-      attribution:
-        "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='http://cartodb.com/attributions'>CartoDB</a>",
-      subdomains: "abcd",
-      maxZoom: 19,
-    }
-  ).addTo(map);
+  L.control.coordinates({
+    position: "bottomleft",
+    decimals: 2,
+    decimalSeperator: ".",
+    labelTemplateLat: "Y: {y}",
+    labelTemplateLng: "X: {x}"
+  }).addTo(map);
 
   sidebar = L.control
     .sidebar({
