@@ -1,7 +1,7 @@
 # leaflet-gsheets
 How to create a simple [Leaflet](https://leafletjs.com/) web map that automatically pulls data from two simple Google Sheets tables. Sidebar created using [leaflet-sidebar-v2](https://github.com/nickpeihl/leaflet-sidebar-v2), and Google Sheets connection with [PapaParse](https://github.com/mholt/PapaParse).
 
-The resultant map can be seen here: [https://rdrn.me/leaflet-gsheets/](https://rdrn.me/leaflet-gsheets/)
+The resultant map can be seen here: https://ccapizzano.github.io/CoS_Waterdeep/
 
 I explained the process in more length in my blog post here: [Leaflet maps with data from Google Sheets](https://rdrn.me/leaflet-maps-google-sheets/).
 
