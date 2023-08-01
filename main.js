@@ -67,85 +67,105 @@ function init() {
   //   header: true,
   //   complete: addGeoms,
   // });
+
   Papa.parse(pointsURL, {
     download: true,
     header: true,
-    complete: function addPoints(data) {
-      for (var row in data) {
-        var marker = L.marker([
-          data[row].lat,
-          data[row].lon
-        ]).addTo(map);
-        marker.bindPopup(data[row].name);
-      }
-    },
+    complete: addPoints,
   });
+
+
+  // /*
+  //  * Expects a JSON representation of the table with properties columns
+  //  * and a 'geometry' column that can be parsed by parseGeom()
+  //  */
+  // function addGeoms(data) {
+  //   data = data.data;
+  //   // Need to convert the PapaParse JSON into a GeoJSON
+  //   // Start with an empty GeoJSON of type FeatureCollection
+  //   // All the rows will be inserted into a single GeoJSON
+  //   let fc = {
+  //     type: "FeatureCollection",
+  //     features: [],
+  //   };
+
+  //   for (let row in data) {
+  //     // The Sheets data has a column 'include' that specifies if that row should be mapped
+  //     if (data[row].include == "y") {
+  //       let features = parseGeom(JSON.parse(data[row].geometry));
+  //       features.forEach((el) => {
+  //         el.properties = {
+  //           name: data[row].name,
+  //           description: data[row].description,
+  //         };
+  //         fc.features.push(el);
+  //       });
+  //     }
+  //   }
+
+  //   // The geometries are styled slightly differently on mouse hovers
+  //   let geomStyle = { color: "#2ca25f", fillColor: "#99d8c9", weight: 2 };
+  //   let geomHoverStyle = { color: "green", fillColor: "#2ca25f", weight: 3 };
+
+  //   L.geoJSON(fc, {
+  //     onEachFeature: function (feature, layer) {
+  //       layer.on({
+  //         mouseout: function (e) {
+  //           e.target.setStyle(geomStyle);
+  //         },
+  //         mouseover: function (e) {
+  //           e.target.setStyle(geomHoverStyle);
+  //         },
+  //         click: function (e) {
+  //           // This zooms the map to the clicked geometry
+  //           // Uncomment to enable
+  //           // map.fitBounds(e.target.getBounds());
+
+  //           // if this isn't added, then map.click is also fired!
+  //           L.DomEvent.stopPropagation(e);
+
+  //           document.getElementById("sidebar-title").innerHTML =
+  //             e.target.feature.properties.name;
+  //           document.getElementById("sidebar-content").innerHTML =
+  //             e.target.feature.properties.description;
+  //           sidebar.open(panelID);
+  //         },
+  //       });
+  //     },
+  //     style: geomStyle,
+  //   }).addTo(map);
+  // }
+
+  /*
+  //  * addPoints is a bit simpler, as no GeoJSON is needed for the points
+   */
+  function addPoints(data) {
+    data = data.data;
+
+    //create a layer group to add the points to
+    let pointGroupLayer = L.layerGroup().addTo(map);
+    let markerType = "marker";
+    let markerRadius = 100;
+
+    for (let row = 0; row < data.length; row++) {
+      let marker;
+      marker = L.marker([data[row].lat, data[row].lon]);
+
+      //add custom icons from Google Sheet CSV
+      console.log(data[row].color);
+      console.log(data[row].icon);
+
+      let icon = L.AwesomeMarkers.icon({
+        icon: data[row].icon,
+        markerColor: data[row].color,
+        prefix: "fa"
+      });
+      marker.setIcon(icon);
+      marker.addTo(pointGroupLayer);
+    }
+  }
 }
 
-// /*
-//  * Expects a JSON representation of the table with properties columns
-//  * and a 'geometry' column that can be parsed by parseGeom()
-//  */
-// function addGeoms(data) {
-//   data = data.data;
-//   // Need to convert the PapaParse JSON into a GeoJSON
-//   // Start with an empty GeoJSON of type FeatureCollection
-//   // All the rows will be inserted into a single GeoJSON
-//   let fc = {
-//     type: "FeatureCollection",
-//     features: [],
-//   };
-
-//   for (let row in data) {
-//     // The Sheets data has a column 'include' that specifies if that row should be mapped
-//     if (data[row].include == "y") {
-//       let features = parseGeom(JSON.parse(data[row].geometry));
-//       features.forEach((el) => {
-//         el.properties = {
-//           name: data[row].name,
-//           description: data[row].description,
-//         };
-//         fc.features.push(el);
-//       });
-//     }
-//   }
-
-//   // The geometries are styled slightly differently on mouse hovers
-//   let geomStyle = { color: "#2ca25f", fillColor: "#99d8c9", weight: 2 };
-//   let geomHoverStyle = { color: "green", fillColor: "#2ca25f", weight: 3 };
-
-//   L.geoJSON(fc, {
-//     onEachFeature: function (feature, layer) {
-//       layer.on({
-//         mouseout: function (e) {
-//           e.target.setStyle(geomStyle);
-//         },
-//         mouseover: function (e) {
-//           e.target.setStyle(geomHoverStyle);
-//         },
-//         click: function (e) {
-//           // This zooms the map to the clicked geometry
-//           // Uncomment to enable
-//           // map.fitBounds(e.target.getBounds());
-
-//           // if this isn't added, then map.click is also fired!
-//           L.DomEvent.stopPropagation(e);
-
-//           document.getElementById("sidebar-title").innerHTML =
-//             e.target.feature.properties.name;
-//           document.getElementById("sidebar-content").innerHTML =
-//             e.target.feature.properties.description;
-//           sidebar.open(panelID);
-//         },
-//       });
-//     },
-//     style: geomStyle,
-//   }).addTo(map);
-// }
-
-/*
-//  * addPoints is a bit simpler, as no GeoJSON is needed for the points
- */
 // function addPoints(data) {
 //   data = data.data;
 //   let pointGroupLayer = L.layerGroup()
@@ -213,11 +233,11 @@ function init() {
 //   }
 // }
 
-/*
- * Accepts any GeoJSON-ish object and returns an Array of
- * GeoJSON Features. Attempts to guess the geometry type
- * when a bare coordinates Array is supplied.
- */
+// /*
+//  * Accepts any GeoJSON-ish object and returns an Array of
+//  * GeoJSON Features. Attempts to guess the geometry type
+//  * when a bare coordinates Array is supplied.
+//  */
 // function parseGeom(gj) {
 //   // FeatureCollection
 //   if (gj.type == "FeatureCollection") {
