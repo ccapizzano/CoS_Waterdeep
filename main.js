@@ -137,9 +137,11 @@ function init() {
   }
 
   // Allow mouse click to record and print X-Y coordinates to console
-  marker.on('click', function (ev) {
-    var latlng = map.mouseEventToLatLng(ev.originalEvent);
-    console.log(latlng.lat + ', ' + latlng.lng);
+  map.on('click', function (e) {
+    var coord = e.latlng;
+    var Y = coord.lat;
+    var X = coord.lng;
+    console.log("You clicked the map at:\nY: " + Y + "\nX: " + X);
   });
 
 
