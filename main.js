@@ -70,7 +70,15 @@ function init() {
   Papa.parse(pointsURL, {
     download: true,
     header: true,
-    complete: addPoints,
+    complete: function addPoints(data) {
+      for (var row in data) {
+        var marker = L.marker([
+          data[row].lat,
+          data[row].lon
+        ]).addTo(map);
+        marker.bindPopup(data[row].name);
+      }
+    },
   });
 }
 
@@ -138,72 +146,72 @@ function init() {
 /*
 //  * addPoints is a bit simpler, as no GeoJSON is needed for the points
  */
-function addPoints(data) {
-  data = data.data;
-  let pointGroupLayer = L.layerGroup()
+// function addPoints(data) {
+//   data = data.data;
+//   let pointGroupLayer = L.layerGroup()
 
-  // Choose marker type. Options are:
-  // (these are case-sensitive, defaults to marker!)
-  // marker: standard point with an icon
-  // circleMarker: a circle with a radius set in pixels
-  // circle: a circle with a radius set in meters
-  let markerType = "marker";
+//   // Choose marker type. Options are:
+//   // (these are case-sensitive, defaults to marker!)
+//   // marker: standard point with an icon
+//   // circleMarker: a circle with a radius set in pixels
+//   // circle: a circle with a radius set in meters
+//   let markerType = "marker";
 
-  // Marker radius
-  // Wil be in pixels for circleMarker, metres for circle
-  // Ignore for point
-  let markerRadius = 100;
+//   // Marker radius
+//   // Wil be in pixels for circleMarker, metres for circle
+//   // Ignore for point
+//   let markerRadius = 100;
 
-  for (let row = 0; row < data.length; row++) {
-    let marker;
-    if (markerType == "circleMarker") {
-      marker = L.circleMarker([data[row].lat, data[row].lon], {
-        radius: markerRadius,
-      });
-    } else if (markerType == "circle") {
-      marker = L.circle([data[row].lat, data[row].lon], {
-        radius: markerRadius,
-      });
-    } else {
-      marker = L.marker([data[row].lat, data[row].lon]);
-    }
-    marker.addTo(pointGroupLayer);
+//   for (let row = 0; row < data.length; row++) {
+//     let marker;
+//     if (markerType == "circleMarker") {
+//       marker = L.circleMarker([data[row].lat, data[row].lon], {
+//         radius: markerRadius,
+//       });
+//     } else if (markerType == "circle") {
+//       marker = L.circle([data[row].lat, data[row].lon], {
+//         radius: markerRadius,
+//       });
+//     } else {
+//       marker = L.marker([data[row].lat, data[row].lon]);
+//     }
+//     marker.addTo(pointGroupLayer);
 
-    // UNCOMMENT THIS LINE TO USE POPUPS
-    //marker.bindPopup('<h2>' + data[row].name + '</h2>There's a ' + data[row].description + ' here');
+//     // UNCOMMENT THIS LINE TO USE POPUPS
+//     //marker.bindPopup('<h2>' + data[row].name + '</h2>There's a ' + data[row].description + ' here');
 
-    // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
-    marker.feature = {
-      properties: {
-        name: data[row].name,
-        description: data[row].description,
-      },
-    };
-    marker.on({
-      click: function (e) {
-        L.DomEvent.stopPropagation(e);
-        document.getElementById("sidebar-title").innerHTML =
-          e.target.feature.properties.name;
-        document.getElementById("sidebar-content").innerHTML =
-          e.target.feature.properties.description;
-        sidebar.open(panelID);
-      },
-    });
-    // COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
+//     // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
+//     marker.feature = {
+//       properties: {
+//         name: data[row].name,
+//         description: data[row].description,
+//       },
+//     };
+//     marker.on({
+//       click: function (e) {
+//         L.DomEvent.stopPropagation(e);
+//         document.getElementById("sidebar-title").innerHTML =
+//           e.target.feature.properties.name;
+//         document.getElementById("sidebar-content").innerHTML =
+//           e.target.feature.properties.description;
+//         sidebar.open(panelID);
+//       },
+//     });
+//     // COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
 
-    // AwesomeMarkers is used to create fancier icons
-    let icon = L.AwesomeMarkers.icon({
-      icon: "info-circle",
-      iconColor: "white",
-      markerColor: data[row].color,
-      prefix: "fa",
-      extraClasses: "fa-rotate-0",
-    });
-    if (!markerType.includes("circle")) {
-      marker.setIcon(icon);
-    }
-  }
-}
+//     // AwesomeMarkers is used to create fancier icons
+//     let icon = L.AwesomeMarkers.icon({
+//       icon: "info-circle",
+//       iconColor: "white",
+//       markerColor: data[row].color,
+//       prefix: "fa",
+//       extraClasses: "fa-rotate-0",
+//     });
+//     if (!markerType.includes("circle")) {
+//       marker.setIcon(icon);
+//     }
+//   }
+// }
 
 /*
  * Accepts any GeoJSON-ish object and returns an Array of
