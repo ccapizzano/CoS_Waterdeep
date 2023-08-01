@@ -13,22 +13,7 @@ let geomURL =
 let pointsURL =
   "https://docs.google.com/spreadsheets/d/1JGuHM4MJytdipmbbkjH9N58BoSMqQNOH5NBRUs6L0pM/edit?usp=sharing";
 
-// window.addEventListener("DOMContentLoaded", init);
-
-var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSW7of5m8UoPrBQT8BAPzSyzBF852GpQ6MNXlOOZSM1S4ta1iRwjV3qKJ3Qhv_lmtp1sb8heo2UYLJ6/pubhtml';
-
-  function init() {
-    Tabletop.init( { key: publicSpreadsheetUrl,
-                     callback: showInfo,
-                     simpleSheet: true } )
-  }
-
-  function showInfo(data, tabletop) {
-    alert('Successfully processed!')
-    console.log(data);
-  }
-
-  window.addEventListener('DOMContentLoaded', init)
+window.addEventListener("DOMContentLoaded", init);
 
 let map;
 let sidebar;

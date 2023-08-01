@@ -47,8 +47,28 @@
     <script src="js/leaflet-sidebar.js"></script>
     <script src="js/leaflet.awesome-markers.min.js"></script>
     <script src="js/Leaflet.Coordinates-0.1.5.min.js"></script>
-    <script src="js/papaparse.min.js"></script>
-    <script src="main.js"></script>
+    <!-- <script src="js/papaparse.min.js"></script> -->
+    <!-- <script src="main.js"></script> -->
+
+    <script>
+        var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1JGuHM4MJytdipmbbkjH9N58BoSMqQNOH5NBRUs6L0pM/edit?usp=sharing';
+
+        function init() {
+            Tabletop.init({
+                key: publicSpreadsheetUrl,
+                callback: showInfo,
+                simpleSheet: true
+            })
+        }
+
+        function showInfo(data, tabletop) {
+            alert('Successfully processed!')
+            console.log(data);
+        }
+
+        window.addEventListener('DOMContentLoaded', init)
+
+    </script>
 </body>
 
 </html>
