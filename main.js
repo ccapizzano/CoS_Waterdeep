@@ -124,7 +124,8 @@ function init() {
 
       // AwesomeMarkers is used to create fancier icons
       let icon = L.AwesomeMarkers.icon({
-        icon: "info-circle",
+        // icon: "info-circle",
+        icon: data[row].icon,
         iconColor: "white",
         markerColor: data[row].color,
         prefix: "fa",
