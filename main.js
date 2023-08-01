@@ -8,8 +8,8 @@
 // PASTE YOUR URLs HERE
 // these URLs come from Google Sheets 'shareable link' form
 // the first is the geometry layer and the second the points
-let geomURL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRGB2YPDc_F5szLKIv66aJWxJ_v4YHKjbx0tBPa0IXEFWaU0sQnPHTQ_e_IF4jc8PVqBlidyNVLYyyh/pub?output=csv';
+// let geomURL =
+//   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRGB2YPDc_F5szLKIv66aJWxJ_v4YHKjbx0tBPa0IXEFWaU0sQnPHTQ_e_IF4jc8PVqBlidyNVLYyyh/pub?output=csv';
 let pointsURL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSW7of5m8UoPrBQT8BAPzSyzBF852GpQ6MNXlOOZSM1S4ta1iRwjV3qKJ3Qhv_lmtp1sb8heo2UYLJ6/pub?output=csv';
 
@@ -25,6 +25,7 @@ let panelID = "my-info-panel";
 function init() {
   // Create a new Leaflet map centered on the Waterdeep map
   var map = L.map('map').setView([20, -100], 3);
+
   L.tileLayer('map/{z}/{x}/{y}.png', {
     continuousWorld: false,
     noWrap: true,
@@ -37,7 +38,8 @@ function init() {
     decimals: 2,
     decimalSeperator: ".",
     labelTemplateLat: "Y: {y}",
-    labelTemplateLng: "X: {x}"
+    labelTemplateLng: "X: {x}",
+    useLatLngOrder: true
   }).addTo(map);
 
   sidebar = L.control
@@ -45,8 +47,7 @@ function init() {
       container: "sidebar",
       closeButton: true,
       position: "right",
-    })
-    .addTo(map);
+    }).addTo(map);
 
   let panelContent = {
     id: panelID,
@@ -62,11 +63,11 @@ function init() {
 
   // Use PapaParse to load data from Google Sheets
   // And call the respective functions to add those to the map.
-  Papa.parse(geomURL, {
-    download: true,
-    header: true,
-    complete: addGeoms,
-  });
+  // Papa.parse(geomURL, {
+  //   download: true,
+  //   header: true,
+  //   complete: addGeoms,
+  // });
   Papa.parse(pointsURL, {
     download: true,
     header: true,
@@ -78,62 +79,62 @@ function init() {
  * Expects a JSON representation of the table with properties columns
  * and a 'geometry' column that can be parsed by parseGeom()
  */
-function addGeoms(data) {
-  data = data.data;
-  // Need to convert the PapaParse JSON into a GeoJSON
-  // Start with an empty GeoJSON of type FeatureCollection
-  // All the rows will be inserted into a single GeoJSON
-  let fc = {
-    type: "FeatureCollection",
-    features: [],
-  };
+// function addGeoms(data) {
+//   data = data.data;
+//   // Need to convert the PapaParse JSON into a GeoJSON
+//   // Start with an empty GeoJSON of type FeatureCollection
+//   // All the rows will be inserted into a single GeoJSON
+//   let fc = {
+//     type: "FeatureCollection",
+//     features: [],
+//   };
 
-  for (let row in data) {
-    // The Sheets data has a column 'include' that specifies if that row should be mapped
-    if (data[row].include == "y") {
-      let features = parseGeom(JSON.parse(data[row].geometry));
-      features.forEach((el) => {
-        el.properties = {
-          name: data[row].name,
-          description: data[row].description,
-        };
-        fc.features.push(el);
-      });
-    }
-  }
+//   for (let row in data) {
+//     // The Sheets data has a column 'include' that specifies if that row should be mapped
+//     if (data[row].include == "y") {
+//       let features = parseGeom(JSON.parse(data[row].geometry));
+//       features.forEach((el) => {
+//         el.properties = {
+//           name: data[row].name,
+//           description: data[row].description,
+//         };
+//         fc.features.push(el);
+//       });
+//     }
+//   }
 
-  // The geometries are styled slightly differently on mouse hovers
-  let geomStyle = { color: "#2ca25f", fillColor: "#99d8c9", weight: 2 };
-  let geomHoverStyle = { color: "green", fillColor: "#2ca25f", weight: 3 };
+//   // The geometries are styled slightly differently on mouse hovers
+//   let geomStyle = { color: "#2ca25f", fillColor: "#99d8c9", weight: 2 };
+//   let geomHoverStyle = { color: "green", fillColor: "#2ca25f", weight: 3 };
 
-  L.geoJSON(fc, {
-    onEachFeature: function (feature, layer) {
-      layer.on({
-        mouseout: function (e) {
-          e.target.setStyle(geomStyle);
-        },
-        mouseover: function (e) {
-          e.target.setStyle(geomHoverStyle);
-        },
-        click: function (e) {
-          // This zooms the map to the clicked geometry
-          // Uncomment to enable
-          // map.fitBounds(e.target.getBounds());
+//   L.geoJSON(fc, {
+//     onEachFeature: function (feature, layer) {
+//       layer.on({
+//         mouseout: function (e) {
+//           e.target.setStyle(geomStyle);
+//         },
+//         mouseover: function (e) {
+//           e.target.setStyle(geomHoverStyle);
+//         },
+//         click: function (e) {
+//           // This zooms the map to the clicked geometry
+//           // Uncomment to enable
+//           // map.fitBounds(e.target.getBounds());
 
-          // if this isn't added, then map.click is also fired!
-          L.DomEvent.stopPropagation(e);
+//           // if this isn't added, then map.click is also fired!
+//           L.DomEvent.stopPropagation(e);
 
-          document.getElementById("sidebar-title").innerHTML =
-            e.target.feature.properties.name;
-          document.getElementById("sidebar-content").innerHTML =
-            e.target.feature.properties.description;
-          sidebar.open(panelID);
-        },
-      });
-    },
-    style: geomStyle,
-  }).addTo(map);
-}
+//           document.getElementById("sidebar-title").innerHTML =
+//             e.target.feature.properties.name;
+//           document.getElementById("sidebar-content").innerHTML =
+//             e.target.feature.properties.description;
+//           sidebar.open(panelID);
+//         },
+//       });
+//     },
+//     style: geomStyle,
+//   }).addTo(map);
+// }
 
 /*
  * addPoints is a bit simpler, as no GeoJSON is needed for the points
