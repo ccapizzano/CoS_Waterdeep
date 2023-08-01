@@ -68,7 +68,6 @@ function init() {
     complete: addPoints,
   });
 
-
   //  addPoints is a bit simpler, as no GeoJSON is needed for the points
   function addPoints(data) {
     data = data.data;
@@ -136,4 +135,12 @@ function init() {
       }
     }
   }
+
+  // Allow mouse click to record and print X-Y coordinates to console
+  marker.on('click', function (ev) {
+    var latlng = map.mouseEventToLatLng(ev.originalEvent);
+    console.log(latlng.lat + ', ' + latlng.lng);
+  });
+
+
 }
