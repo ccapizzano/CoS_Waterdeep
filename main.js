@@ -1,8 +1,8 @@
 /* global L Papa */
 
 /*
- * Script to display two tables from Google Sheets as point and geometry layers using Leaflet
- * The Sheets are then imported using PapaParse and overwrite the initially laded layers
+//  * Script to display two tables from Google Sheets as point and geometry layers using Leaflet
+//  * The Sheets are then imported using PapaParse and overwrite the initially laded layers
  */
 
 // PASTE YOUR URLs HERE
@@ -20,12 +20,11 @@ let sidebar;
 let panelID = "my-info-panel";
 
 /*
- * init() is called when the page has loaded
+//  * init() is called when the page has loaded
  */
 function init() {
   // Create a new Leaflet map centered on the Waterdeep map
   var map = L.map('map').setView([20, -100], 3);
-
   L.tileLayer('map/{z}/{x}/{y}.png', {
     continuousWorld: false,
     noWrap: true,
@@ -75,10 +74,10 @@ function init() {
   });
 }
 
-/*
- * Expects a JSON representation of the table with properties columns
- * and a 'geometry' column that can be parsed by parseGeom()
- */
+// /*
+//  * Expects a JSON representation of the table with properties columns
+//  * and a 'geometry' column that can be parsed by parseGeom()
+//  */
 // function addGeoms(data) {
 //   data = data.data;
 //   // Need to convert the PapaParse JSON into a GeoJSON
@@ -137,7 +136,7 @@ function init() {
 // }
 
 /*
- * addPoints is a bit simpler, as no GeoJSON is needed for the points
+//  * addPoints is a bit simpler, as no GeoJSON is needed for the points
  */
 function addPoints(data) {
   data = data.data;
@@ -211,34 +210,34 @@ function addPoints(data) {
  * GeoJSON Features. Attempts to guess the geometry type
  * when a bare coordinates Array is supplied.
  */
-function parseGeom(gj) {
-  // FeatureCollection
-  if (gj.type == "FeatureCollection") {
-    return gj.features;
-  }
+// function parseGeom(gj) {
+//   // FeatureCollection
+//   if (gj.type == "FeatureCollection") {
+//     return gj.features;
+//   }
 
-  // Feature
-  else if (gj.type == "Feature") {
-    return [gj];
-  }
+//   // Feature
+//   else if (gj.type == "Feature") {
+//     return [gj];
+//   }
 
-  // Geometry
-  else if ("type" in gj) {
-    return [{ type: "Feature", geometry: gj }];
-  }
+//   // Geometry
+//   else if ("type" in gj) {
+//     return [{ type: "Feature", geometry: gj }];
+//   }
 
-  // Coordinates
-  else {
-    let type;
-    if (typeof gj[0] == "number") {
-      type = "Point";
-    } else if (typeof gj[0][0] == "number") {
-      type = "LineString";
-    } else if (typeof gj[0][0][0] == "number") {
-      type = "Polygon";
-    } else {
-      type = "MultiPolygon";
-    }
-    return [{ type: "Feature", geometry: { type: type, coordinates: gj } }];
-  }
-}
+//   // Coordinates
+//   else {
+//     let type;
+//     if (typeof gj[0] == "number") {
+//       type = "Point";
+//     } else if (typeof gj[0][0] == "number") {
+//       type = "LineString";
+//     } else if (typeof gj[0][0][0] == "number") {
+//       type = "Polygon";
+//     } else {
+//       type = "MultiPolygon";
+//     }
+//     return [{ type: "Feature", geometry: { type: type, coordinates: gj } }];
+//   }
+// }
