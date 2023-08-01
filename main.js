@@ -11,7 +11,7 @@
 let geomURL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGB2YPDc_F5szLKIv66aJWxJ_v4YHKjbx0tBPa0IXEFWaU0sQnPHTQ_e_IF4jc8PVqBlidyNVLYyyh/pub?output=csv";
 let pointsURL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSW7of5m8UoPrBQT8BAPzSyzBF852GpQ6MNXlOOZSM1S4ta1iRwjV3qKJ3Qhv_lmtp1sb8heo2UYLJ6/pub?output=csv";
+  "https://docs.google.com/spreadsheets/d/1JGuHM4MJytdipmbbkjH9N58BoSMqQNOH5NBRUs6L0pM/edit?usp=sharing";
 
 window.addEventListener("DOMContentLoaded", init);
 
