@@ -171,7 +171,8 @@ function init() {
         properties: {
           name: data[row].name,
           description: data[row].description,
-          session: data[row].session
+          session: data[row].session,
+          npc: data[row].npc
         },
       };
       marker.on({
@@ -179,10 +180,10 @@ function init() {
           L.DomEvent.stopPropagation(e);
           document.getElementById("sidebar-title").innerHTML =
             e.target.feature.properties.name;
+          // document.getElementById("sidebar-content").innerHTML =
+          //   e.target.feature.properties.description;
           document.getElementById("sidebar-content").innerHTML =
-            e.target.feature.properties.description;
-          document.getElementById("sidebar-content").innerHTML =
-            e.target.feature.properties.session;
+            '<i>' + e.target.feature.properties.description + '</i>'
           sidebar.open(panelID);
         },
       });
