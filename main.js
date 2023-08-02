@@ -104,24 +104,24 @@ function init() {
   }
 
   // Sidebar
-  // sidebar = L.control
-  //   .sidebar({
-  //     container: "sidebar",
-  //     closeButton: true,
-  //     position: "right",
-  //   }).addTo(map);
+  sidebar = L.control
+    .sidebar({
+      container: "sidebar",
+      closeButton: true,
+      position: "right",
+    }).addTo(map);
 
-  // let panelContent = {
-  //   id: panelID,
-  //   tab: "<i class='fa fa-bars active'></i>",
-  //   pane: "<p id='sidebar-content'></p>",
-  //   title: "<h2 id='sidebar-title'>Nothing selected</h2>",
-  // };
-  // sidebar.addPanel(panelContent);
+  let panelContent = {
+    id: panelID,
+    tab: "<i class='fa fa-bars active'></i>",
+    pane: "<p id='sidebar-content'></p>",
+    title: "<h2 id='sidebar-title'>Nothing selected</h2>",
+  };
+  sidebar.addPanel(panelContent);
 
-  // map.on("click", function () {
-  //   sidebar.close(panelID);
-  // });
+  map.on("click", function () {
+    sidebar.close(panelID);
+  });
 
   // Use PapaParse to load data from Google Sheets
   // And call the respective functions to add those to the map.
@@ -164,35 +164,33 @@ function init() {
       marker.addTo(pointGroupLayer);
 
       // UNCOMMENT THIS LINE TO USE POPUPS
-      marker.bindPopup(
-        '<h2>' + data[row].name + '</h2> ' + data[row].description
-      );
+      //marker.bindPopup('<h2>' + data[row].name + '</h2>There's a ' + data[row].description + ' here');
 
       // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
-      // marker.feature = {
-      //     properties: {
-      //       name: data[row].name,
-      //       description: data[row].description,
-      //       session: data[row].session,
-      //       npc: data[row].npc
-      //     },
-      //   };
-      // marker.on({
-      //   click: function (e) {
-      //     L.DomEvent.stopPropagation(e);
-      //     document.getElementById("sidebar-title").innerHTML =
-      //       e.target.feature.properties.name;
-      //     // document.getElementById("sidebar-content").innerHTML =
-      //     //   e.target.feature.properties.description;
-      //     document.getElementById("sidebar-content").innerHTML =
-      //       '<i>' + e.target.feature.properties.description + '</i>' +
-      //       '<br>' +
-      //       '<hr>' +
-      //       '<br>' +
-      //       '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + e.target.feature.properties.session
-      //     sidebar.open(panelID);
-      //   },
-      // });
+      marker.feature = {
+        properties: {
+          name: data[row].name,
+          description: data[row].description,
+          session: data[row].session,
+          npc: data[row].npc
+        },
+      };
+      marker.on({
+        click: function (e) {
+          L.DomEvent.stopPropagation(e);
+          document.getElementById("sidebar-title").innerHTML =
+            e.target.feature.properties.name;
+          // document.getElementById("sidebar-content").innerHTML =
+          //   e.target.feature.properties.description;
+          document.getElementById("sidebar-content").innerHTML =
+            '<i>' + e.target.feature.properties.description + '</i>' +
+            '<br>' +
+            '<hr>' +
+            '<br>' +
+            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b>' + e.target.feature.properties.session
+          sidebar.open(panelID);
+        },
+      });
       // COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
 
       // AwesomeMarkers is used to create fancier icons
