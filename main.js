@@ -185,9 +185,10 @@ function init() {
           document.getElementById("sidebar-content").innerHTML =
             '<i>' + e.target.feature.properties.description + '</i>' +
             '<br>' +
+            '<br>' +
             '<hr>' +
             '<br>' +
-            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b>' + e.target.feature.properties.session
+            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + e.target.feature.properties.session
           sidebar.open(panelID);
         },
       });
