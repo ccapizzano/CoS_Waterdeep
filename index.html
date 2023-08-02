@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="css/leaflet-sidebar.css" />
     <link rel="stylesheet" href="css/leaflet.awesome-markers.css" />
     <link rel="stylesheet" href="css/Leaflet.Coordinates-0.1.5.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.2/dist/leaflet.draw-src.css" />
+
     <style>
         body {
             padding: 0;
@@ -37,17 +39,41 @@
             background: black;
             outline: 0;
         }
+
+        #delete,
+        #export {
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            z-index: 100;
+            background: white;
+            color: black;
+            padding: 6px;
+            border-radius: 4px;
+            /* font-family: 'Helvetica Neue'; */
+            font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        #export {
+            bottom: 75px;
+        }
     </style>
 </head>
 
 <body>
     <div id="map"></div>
+    <div id='delete'>Delete Features</div>
+    <a href='#' id='export'>Export Features</a>
+
     <script src="js/leaflet.js"></script>
-    <!-- <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script> -->
     <script src="js/leaflet-sidebar.js"></script>
     <script src="js/leaflet.awesome-markers.min.js"></script>
     <script src="js/Leaflet.Coordinates-0.1.5.min.js"></script>
     <script src="js/papaparse.min.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.2/dist/leaflet.draw-src.js"></script>
     <script src="main.js"></script>
 
 

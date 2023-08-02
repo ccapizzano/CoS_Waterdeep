@@ -23,8 +23,11 @@ let panelID = "my-info-panel";
 //  * init() is called when the page has loaded
  */
 function init() {
+
   // Create a new Leaflet map centered on the Waterdeep map
-  var map = L.map('map').setView([20, -100], 3);
+  var map = L.map('map').setView([33.43144133557529, -102.65625000000001], 3);
+
+  // Setup Waterdeep tile layer
   L.tileLayer('map/{z}/{x}/{y}.png', {
     continuousWorld: false,
     noWrap: true,
@@ -32,6 +35,7 @@ function init() {
     maxZoom: 8,
   }).addTo(map);
 
+  // Display coordinates
   L.control.coordinates({
     position: "bottomleft",
     decimals: 2,
@@ -41,6 +45,65 @@ function init() {
     useLatLngOrder: true
   }).addTo(map);
 
+  // Draw toolbar
+  var featureGroup = L.featureGroup().addTo(map);
+
+  var drawControl = new L.Control.Draw({
+    draw: {
+      polygon: {
+        allowIntersection: false, // Restricts shapes to simple polygons
+        drawError: {
+          color: 'red', // Color the shape will turn when intersects
+          message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+        },
+        shapeOptions: {
+          color: '#6b006e'
+        }
+      },
+      rectangle: {
+        allowIntersection: false, // Restricts shapes to simple polygons
+        drawError: {
+          color: '#e1e100', // Color the shape will turn when intersects
+          message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+        },
+        shapeOptions: {
+          color: '#6b006e'
+        }
+      },
+      polyline: false,
+      circle: false,
+      circlemarker: false,
+      marker: false
+    },
+    edit: {
+      featureGroup: featureGroup
+    }
+  }).addTo(map);
+
+  map.on('draw:created', function (e) {
+
+    // Each time a feaute is created, it's added to the over arching feature group
+    featureGroup.addLayer(e.layer);
+  });
+
+  // on click, clear all layers
+  document.getElementById('delete').onclick = function (e) {
+    featureGroup.clearLayers();
+  }
+
+  document.getElementById('export').onclick = function (e) {
+    // Extract GeoJson from featureGroup
+    var data = featureGroup.toGeoJSON();
+
+    // Stringify the GeoJson
+    var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+
+    // Create export
+    document.getElementById('export').setAttribute('href', 'data:' + convertedData);
+    document.getElementById('export').setAttribute('download', 'data.geojson');
+  }
+
+  // Sidebar
   sidebar = L.control
     .sidebar({
       container: "sidebar",
