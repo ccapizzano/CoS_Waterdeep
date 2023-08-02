@@ -171,6 +171,7 @@ function init() {
         properties: {
           name: data[row].name,
           description: data[row].description,
+          session: data[row].session
         },
       };
       marker.on({
@@ -180,6 +181,8 @@ function init() {
             e.target.feature.properties.name;
           document.getElementById("sidebar-content").innerHTML =
             e.target.feature.properties.description;
+          document.getElementById("sidebar-content").innerHTML =
+            e.target.feature.properties.session;
           sidebar.open(panelID);
         },
       });
