@@ -16,7 +16,7 @@ let pointsURL =
 window.addEventListener("DOMContentLoaded", init);
 
 let map;
-let sidebar;
+// let sidebar;
 let panelID = "my-info-panel";
 
 /*
@@ -25,7 +25,11 @@ let panelID = "my-info-panel";
 function init() {
 
   // Create a new Leaflet map centered on the Waterdeep map
-  var map = L.map('map').setView([33.43144133557529, -102.65625000000001], 3);
+  // var map = L.map('map').setView([33.43144133557529, -102.65625000000001], 3);
+  var map = L.map('map').fitBounds([
+    [-79.87429692631282, -180],
+    [85.05018093458116, -23.5601806640625]
+  ])
 
   // Setup Waterdeep tile layer
   L.tileLayer('map/{z}/{x}/{y}.png', {
@@ -104,24 +108,24 @@ function init() {
   }
 
   // Sidebar
-  sidebar = L.control
-    .sidebar({
-      container: "sidebar",
-      closeButton: true,
-      position: "right",
-    }).addTo(map);
+  // sidebar = L.control
+  //   .sidebar({
+  //     container: "sidebar",
+  //     closeButton: true,
+  //     position: "right",
+  //   }).addTo(map);
 
-  let panelContent = {
-    id: panelID,
-    tab: "<i class='fa fa-bars active'></i>",
-    pane: "<p id='sidebar-content'></p>",
-    title: "<h2 id='sidebar-title'>Nothing selected</h2>",
-  };
-  sidebar.addPanel(panelContent);
+  // let panelContent = {
+  //   id: panelID,
+  //   tab: "<i class='fa fa-bars active'></i>",
+  //   pane: "<p id='sidebar-content'></p>",
+  //   title: "<h2 id='sidebar-title'>Nothing selected</h2>",
+  // };
+  // sidebar.addPanel(panelContent);
 
-  map.on("click", function () {
-    sidebar.close(panelID);
-  });
+  // map.on("click", function () {
+  //   sidebar.close(panelID);
+  // });
 
   // Use PapaParse to load data from Google Sheets
   // And call the respective functions to add those to the map.
@@ -163,35 +167,49 @@ function init() {
       }
       marker.addTo(pointGroupLayer);
 
-      // UNCOMMENT THIS LINE TO USE POPUPS
-      //marker.bindPopup('<h2>' + data[row].name + '</h2>There's a ' + data[row].description + ' here');
-
-      // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
-      marker.feature = {
-        properties: {
-          name: data[row].name,
-          description: data[row].description,
-          session: data[row].session,
-          npc: data[row].npc
-        },
-      };
-      marker.on({
-        click: function (e) {
-          L.DomEvent.stopPropagation(e);
-          document.getElementById("sidebar-title").innerHTML =
-            e.target.feature.properties.name;
-          // document.getElementById("sidebar-content").innerHTML =
-          //   e.target.feature.properties.description;
-          document.getElementById("sidebar-content").innerHTML =
-            '<i>' + e.target.feature.properties.description + '</i>' +
-            '<br>' +
+      // UNCOMMENT THIS SECTION TO USE POPUPS
+      // https://leafletjs.com/reference.html#popup-option
+      marker.bindPopup(
+        L.popup(
+          {
+            maxWidth: 500,
+            closeButton: true,
+            autoClose: true
+          }).setContent(
+            '<h2>' + data[row].name + '</h2>' +
+            '<i>' + data[row].description + '</i>' +
             '<br>' +
             '<hr>' +
-            '<br>' +
-            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + e.target.feature.properties.session
-          sidebar.open(panelID);
-        },
-      });
+            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + data[row].session
+          )
+      )
+
+      // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
+      // marker.feature = {
+      //   properties: {
+      //     name: data[row].name,
+      //     description: data[row].description,
+      //     session: data[row].session,
+      //     npc: data[row].npc
+      //   },
+      // };
+      // marker.on({
+      //   click: function (e) {
+      //     L.DomEvent.stopPropagation(e);
+      //     document.getElementById("sidebar-title").innerHTML =
+      //       e.target.feature.properties.name;
+      //     // document.getElementById("sidebar-content").innerHTML =
+      //     //   e.target.feature.properties.description;
+      //     document.getElementById("sidebar-content").innerHTML =
+      //       '<i>' + e.target.feature.properties.description + '</i>' +
+      //       '<br>' +
+      //       '<br>' +
+      //       '<hr>' +
+      //       '<br>' +
+      //       '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + e.target.feature.properties.session
+      //     sidebar.open(panelID);
+      //   },
+      // });
       // COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
 
       // AwesomeMarkers is used to create fancier icons
@@ -207,6 +225,16 @@ function init() {
         marker.setIcon(icon);
       }
     }
+
+    // Add layer control
+    var overlay = { 'Markers': pointGroupLayer };
+    layerControl = L.control.layers(null, overlay,
+      {
+        position: 'topright',
+        collapsed: false
+      });
+    layerControl.addTo(map);
+
   }
 
   // Allow mouse click to record and print X-Y coordinates to console
@@ -219,3 +247,6 @@ function init() {
 
 
 }
+
+// Extra sites
+// https://gis.stackexchange.com/questions/301286/how-to-fit-bounds-after-adding-multiple-markers
