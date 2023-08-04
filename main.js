@@ -26,10 +26,17 @@ function init() {
 
   // Create a new Leaflet map centered on the Waterdeep map
   // var map = L.map('map').setView([33.43144133557529, -102.65625000000001], 3);
-  var map = L.map('map').fitBounds([
-    [-79.87429692631282, -180],
-    [85.05018093458116, -23.5601806640625]
-  ])
+  var map = L.map('map', {
+    crs: L.CRS.Simple,
+    zoomSnap: 0.1,
+  });
+
+  var bounds = [
+    [0, 0],
+    [-226.78533150541517, 111.26418424076424]
+  ]
+
+  map.fitBounds(bounds)
 
   // Setup Waterdeep tile layer
   L.tileLayer('map/{z}/{x}/{y}.png', {
@@ -74,7 +81,7 @@ function init() {
           color: '#6b006e'
         }
       },
-      polyline: false,
+      polyline: true,
       circle: false,
       circlemarker: false,
       marker: false
@@ -138,7 +145,10 @@ function init() {
   //  addPoints is a bit simpler, as no GeoJSON is needed for the points
   function addPoints(data) {
     data = data.data;
-    let pointGroupLayer = L.layerGroup().addTo(map);
+    // let pointGroupLayer = L.layerGroup().addTo(map);
+    let bars = L.layerGroup().addTo(map);
+    let merchants = L.layerGroup().addTo(map);
+    let gates = L.layerGroup().addTo(map);
 
     // Choose marker type. Options are:
     // (these are case-sensitive, defaults to marker!)
@@ -165,7 +175,17 @@ function init() {
       } else {
         marker = L.marker([data[row].y, data[row].x]);
       }
-      marker.addTo(pointGroupLayer);
+
+      // marker.addTo(pointGroupLayer);
+      if (data[row].category == "Bar") {
+        marker.addTo(bars)
+      }
+      if (data[row].category == "Merchant") {
+        marker.addTo(merchants)
+      }
+      if (data[row].category == "Gate") {
+        marker.addTo(gates)
+      }
 
       // UNCOMMENT THIS SECTION TO USE POPUPS
       // https://leafletjs.com/reference.html#popup-option
@@ -179,8 +199,9 @@ function init() {
             '<h2>' + data[row].name + '</h2>' +
             '<i>' + data[row].description + '</i>' +
             '<br>' +
-            '<hr>' +
-            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + data[row].session
+            '<br>' +
+            '<b>Category</b>: ' + data[row].category + '<br>' +
+            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session</a></b>: ' + data[row].session
           )
       )
 
@@ -227,13 +248,23 @@ function init() {
     }
 
     // Add layer control
-    var overlay = { 'Markers': pointGroupLayer };
-    layerControl = L.control.layers(null, overlay,
+    var overlayTree = [
       {
-        position: 'topright',
-        collapsed: false
-      });
-    layerControl.addTo(map);
+        label: '<b>Points of Interest</b>',
+        children: [
+          { label: 'Gates', layer: gates, name: 'Waterdeep Gates' },
+          { label: 'Merchants', layer: merchants, name: 'Merchants and Shops' },
+          { label: 'Bars', layer: bars, name: 'Bars' },
+        ]
+      },
+    ];
+
+    L.control.layers.tree(null, overlayTree,
+      {
+        collapsed: false,
+      }).addTo(map);
+
+
 
   }
 
@@ -246,7 +277,10 @@ function init() {
   });
 
 
+
 }
+
+
 
 // Extra sites
 // https://gis.stackexchange.com/questions/301286/how-to-fit-bounds-after-adding-multiple-markers
