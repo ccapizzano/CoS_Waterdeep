@@ -251,6 +251,7 @@ function init() {
     var overlayTree = [
       {
         label: '<b>Points of Interest</b>',
+        selectAllCheckbox: true,
         children: [
           { label: 'Gates', layer: gates, name: 'Waterdeep Gates' },
           { label: 'Merchants', layer: merchants, name: 'Merchants and Shops' },
@@ -259,13 +260,15 @@ function init() {
       },
     ];
 
-    L.control.layers.tree(null, overlayTree,
+    var ctl = L.control.layers.tree(null, overlayTree,
       {
         collapsed: false,
-      }).addTo(map);
+        collapseAll: 'Collapse all',
+        expandAll: 'Expand all',
+        labelIsSelector: "base"
+      })
 
-
-
+    ctl.addTo(map)
   }
 
   // Allow mouse click to record and print X-Y coordinates to console
