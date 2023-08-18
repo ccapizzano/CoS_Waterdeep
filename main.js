@@ -148,6 +148,7 @@ function init() {
     // let pointGroupLayer = L.layerGroup().addTo(map);
     let bars = L.layerGroup().addTo(map);
     let merchants = L.layerGroup().addTo(map);
+    let inns = L.layerGroup().addTo(map);
     let gates = L.layerGroup().addTo(map);
 
     // Choose marker type. Options are:
@@ -195,7 +196,7 @@ function init() {
       marker.bindPopup(
         L.popup(
           {
-            maxWidth: 500,
+            maxWidth: 300,
             closeButton: true,
             autoClose: true
           }).setContent(
@@ -203,8 +204,13 @@ function init() {
             '<i>' + data[row].description + '</i>' +
             '<br>' +
             '<br>' +
+            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session</a></b>: ' + data[row].session + '<br>' +
             '<b>Category</b>: ' + data[row].category + '<br>' +
-            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session</a></b>: ' + data[row].session
+            '<b>Room/Food/Booze</b>: ' + data[row].inn_stats + '<br>' +
+            '<br>' +
+            '<b>NPCs</b>: ' + data[row].npc + '<br>' +
+            '<br>' +
+            '<b>Notes</b>: ' + data[row].notes
           )
       )
 
