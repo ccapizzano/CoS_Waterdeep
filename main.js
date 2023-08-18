@@ -180,6 +180,9 @@ function init() {
       if (data[row].category == "Bar") {
         marker.addTo(bars)
       }
+      if (data[row].category == "Inn") {
+        marker.addTo(inns)
+      }
       if (data[row].category == "Merchant") {
         marker.addTo(merchants)
       }
@@ -254,6 +257,7 @@ function init() {
         selectAllCheckbox: true,
         children: [
           { label: 'Gates', layer: gates, name: 'Waterdeep Gates' },
+          { label: 'Inns', layer: inns, name: 'Inns' },
           { label: 'Merchants', layer: merchants, name: 'Merchants and Shops' },
           { label: 'Bars', layer: bars, name: 'Bars' },
         ]
