@@ -150,6 +150,7 @@ function init() {
     let merchants = L.layerGroup().addTo(map);
     let inns = L.layerGroup().addTo(map);
     let gates = L.layerGroup().addTo(map);
+    let guilds = L.layerGroup().addTo(map);
 
     // Choose marker type. Options are:
     // (these are case-sensitive, defaults to marker!)
@@ -189,6 +190,9 @@ function init() {
       }
       if (data[row].category == "Gate") {
         marker.addTo(gates)
+      }
+      if (data[row].category == "Guildhall") {
+        marker.addTo(guilds)
       }
 
       // UNCOMMENT THIS SECTION TO USE POPUPS
@@ -263,8 +267,9 @@ function init() {
         selectAllCheckbox: true,
         children: [
           { label: 'Gates', layer: gates, name: 'Waterdeep Gates' },
-          { label: 'Inns', layer: inns, name: 'Inns' },
+          { label: 'Guildhalls', layer: guilds, name: 'Guildhalls' },
           { label: 'Merchants', layer: merchants, name: 'Merchants and Shops' },
+          { label: 'Inns', layer: inns, name: 'Inns' },
           { label: 'Bars', layer: bars, name: 'Bars' },
         ]
       },
