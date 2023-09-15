@@ -16,7 +16,7 @@ let pointsURL =
 window.addEventListener("DOMContentLoaded", init);
 
 let map;
-// let sidebar;
+let sidebar;
 let panelID = "my-info-panel";
 
 /*
@@ -115,24 +115,24 @@ function init() {
   }
 
   // Sidebar
-  // sidebar = L.control
-  //   .sidebar({
-  //     container: "sidebar",
-  //     closeButton: true,
-  //     position: "right",
-  //   }).addTo(map);
+  sidebar = L.control
+    .sidebar({
+      container: "sidebar",
+      closeButton: true,
+      position: "left",
+    }).addTo(map);
 
-  // let panelContent = {
-  //   id: panelID,
-  //   tab: "<i class='fa fa-bars active'></i>",
-  //   pane: "<p id='sidebar-content'></p>",
-  //   title: "<h2 id='sidebar-title'>Nothing selected</h2>",
-  // };
-  // sidebar.addPanel(panelContent);
+  let panelContent = {
+    id: panelID,
+    tab: "<i class='fa fa-bars active'></i>",
+    pane: "<p id='sidebar-content'></p>",
+    title: "<h2 id='sidebar-title'>No location selected</h2>",
+  };
+  sidebar.addPanel(panelContent);
 
-  // map.on("click", function () {
-  //   sidebar.close(panelID);
-  // });
+  map.on("click", function () {
+    sidebar.close(panelID);
+  });
 
   // Use PapaParse to load data from Google Sheets
   // And call the respective functions to add those to the map.
@@ -145,7 +145,8 @@ function init() {
   //  addPoints is a bit simpler, as no GeoJSON is needed for the points
   function addPoints(data) {
     data = data.data;
-    // let pointGroupLayer = L.layerGroup().addTo(map);
+
+    // let groups = [bars, merchants, inns, gates, guilds]
     let bars = L.layerGroup().addTo(map);
     let merchants = L.layerGroup().addTo(map);
     let inns = L.layerGroup().addTo(map);
@@ -197,36 +198,61 @@ function init() {
 
       // UNCOMMENT THIS SECTION TO USE POPUPS
       // https://leafletjs.com/reference.html#popup-option
-      marker.bindPopup(
-        L.popup(
-          {
-            maxWidth: 300,
-            closeButton: true,
-            autoClose: true
-          }).setContent(
-            '<h2>' + data[row].name + '</h2>' +
-            '<i>' + data[row].description + '</i>' +
-            '<br>' +
-            '<br>' +
-            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session</a></b>: ' + data[row].session + '<br>' +
-            '<b>Category</b>: ' + data[row].category + '<br>' +
-            '<b>Room/Food/Booze</b>: ' + data[row].inn_stats + '<br>' +
-            '<br>' +
-            '<b>NPCs</b>: ' + data[row].npc + '<br>' +
-            '<br>' +
-            '<b>Notes</b>: ' + data[row].notes
-          )
-      )
+      // marker.bindPopup(
+      //   L.popup(
+      //     {
+      //       maxWidth: 300,
+      //       closeButton: true,
+      //       autoClose: true
+      //     }).setContent(
+      //       '<h2>' + data[row].name + '</h2>' +
+      //       '<i>' + data[row].description + '</i>' +
+      //       '<br>' +
+      //       '<br>' +
+      //       '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session</a></b>: ' + data[row].session + '<br>' +
+      //       '<b>Category</b>: ' + data[row].category + '<br>' +
+      //       '<b>Room/Food/Booze</b>: ' + data[row].inn_stats + '<br>' +
+      //       '<br>' +
+      //       '<b>NPCs</b>: ' + data[row].npc + '<br>' +
+      //       '<br>' +
+      //       '<b>Notes</b>: ' + data[row].notes
+      //     )
+      // )
 
       // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
-      // marker.feature = {
-      //   properties: {
-      //     name: data[row].name,
-      //     description: data[row].description,
-      //     session: data[row].session,
-      //     npc: data[row].npc
-      //   },
-      // };
+      marker.feature = {
+        properties: {
+          name: data[row].name,
+          description: data[row].description,
+          session: data[row].session,
+          category: data[row].category,
+          inn_stats: data[row].inn_stats,
+          inn_stats: data[row].inn_stats,
+          npc: data[row].npc,
+          notes: data[row].notes
+
+        },
+      };
+      marker.on({
+        click: function (e) {
+          L.DomEvent.stopPropagation(e);
+          document.getElementById("sidebar-title").innerHTML =
+            '<h2>' + e.target.feature.properties.name + '</h2>'
+
+          document.getElementById("sidebar-content").innerHTML =
+            '<i>' + e.target.feature.properties.description + '</i>' +
+            '<br>' +
+            '<br>' +
+            '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session</a></b>: ' + e.target.feature.properties.session + '<br>' +
+            '<b>Category</b>: ' + e.target.feature.properties.category + '<br>' +
+            '<b>Room/Food/Booze</b>: ' + e.target.feature.properties.inn_stats + '<br>' +
+            '<br>' +
+            '<b>NPCs</b>: ' + e.target.feature.properties.npc + '<br>' +
+            '<br>' +
+            '<b>Notes</b>: ' + e.target.feature.properties.notes
+          sidebar.open(panelID);
+        },
+      });
       // marker.on({
       //   click: function (e) {
       //     L.DomEvent.stopPropagation(e);
@@ -241,7 +267,7 @@ function init() {
       //       '<hr>' +
       //       '<br>' +
       //       '<b><a href="https://docs.google.com/document/d/1AIyuBI4_68FiBrRXwBQu0WXtxzud9VpA1_AyKc8Eg78/edit?usp=sharing">Session:</a></b> ' + e.target.feature.properties.session
-      //     sidebar.open(panelID);
+      //       sidebar.open(panelID);
       //   },
       // });
       // COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
@@ -280,7 +306,8 @@ function init() {
         collapsed: false,
         collapseAll: 'Collapse all',
         expandAll: 'Expand all',
-        labelIsSelector: "base"
+        labelIsSelector: "base",
+        position: "topright"
       })
 
     ctl.addTo(map)

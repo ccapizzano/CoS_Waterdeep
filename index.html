@@ -30,14 +30,18 @@
             width: 100%;
         }
 
+        .leaflet-sidebar {
+            width: 100%
+        }
+
         #sidebar-title {
             word-break: break-word;
-            margin-right: 40px;
+            margin-right: 20px;
         }
 
         #sidebar-content {
             word-break: break-word;
-            margin-right: 40px;
+            margin-right: 20px;
             font-size: 16px;
         }
 
@@ -49,8 +53,8 @@
         #delete,
         #export {
             position: absolute;
-            bottom: 40px;
-            left: 10px;
+            bottom: 30px;
+            right: 10px;
             z-index: 600;
             background: white;
             color: black;
@@ -64,12 +68,14 @@
         }
 
         #export {
-            bottom: 75px;
+            bottom: 65px;
         }
     </style>
 </head>
 
 <body>
+
+
     <div id="map"></div>
     <div id='delete'>Delete Features</div>
     <a href='#' id='export'>Export Features</a>
